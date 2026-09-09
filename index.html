@@ -1,204 +1,649 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AXIOMIAT · Ursprung · Kompatibilitäts‑Hub</title>
-<style>
-  :root {
-    --bg:#111; --fg:#e6e6e6; --dim:#8a8a8a; --axiom:#ffaa00; --nc:#f66;
-    --border:#2a2a2a; --accent:#7ff;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    background: radial-gradient(ellipse at 50% 0%, #181818 0%, #0a0a0a 100%);
-    color: var(--fg); font-family: monospace; letter-spacing: 0.03em;
-    padding: 6vh 5vw; min-height: 100vh;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>👑 IKI1UC · NET.work · Königliche Atom‑Index (Universalis)</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: #0a0a12;
+      color: #d0d9e6;
+      font-family: 'Consolas', monospace;
+      padding: 16px;
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 20% 30%, #0c0c1a, #000);
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      border-bottom: 2px solid #ffd700;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 26px;
+      letter-spacing: 4px;
+      background: linear-gradient(90deg, #ffd700, #66ccff, #ff66ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header .sub {
+      font-size: 11px;
+      color: #3d5a70;
+      letter-spacing: 2px;
+      -webkit-text-fill-color: #3d5a70;
+    }
+    .status-led {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+    }
+    .led {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+    .led.green { background: #4f4; box-shadow: 0 0 8px #4f4; }
+    .led.yellow { background: #ffa; box-shadow: 0 0 8px #ffa; }
+    .led.red { background: #f66; box-shadow: 0 0 8px #f66; }
 
-  #origin { font-size: 2rem; text-align:center; opacity:0.95; }
-  #note { font-size: 0.95rem; text-align:center; opacity:0.6; margin-top:6px; }
-  .marker { text-align:center; margin-top:1.6rem; font-size:1.1rem; opacity:0.8; color:var(--axiom); }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .grid-3 { grid-template-columns: 1fr; } }
 
-  section { max-width: 900px; margin: 3rem auto 0; }
-  h2 {
-    color: var(--axiom); font-size: 1rem; letter-spacing: 0.15em;
-    border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px;
-  }
+    .card {
+      background: rgba(10,10,20,0.75);
+      border: 1px solid #1a1a2a;
+      border-radius: 12px;
+      padding: 16px;
+      backdrop-filter: blur(4px);
+      transition: border-color 0.3s;
+    }
+    .card:hover { border-color: #ffd70055; }
+    .card h2 {
+      color: #ffd700;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .card h2 .badge {
+      font-size: 9px;
+      background: #1a1a2a;
+      padding: 2px 10px;
+      border-radius: 20px;
+      color: #888;
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+    .metric {
+      background: #0e0e1a;
+      border-radius: 4px;
+      padding: 4px 8px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+    }
+    .metric .label { color: #666; }
+    .metric .value { font-weight: bold; }
+    .value.gold { color: #ffd700; }
+    .value.cyan { color: #66ccff; }
+    .value.pink { color: #ff66ff; }
+    .value.green { color: #4f4; }
+    .value.orange { color: #ff8c00; }
 
-  /* AXIOMIAT.SET */
-  #set-grid { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
-  .set-item {
-    border: 1px solid var(--border); border-radius: 6px; padding: 10px 18px;
-    text-align:center; background:#151515;
-  }
-  .set-item .val { font-size:1.2rem; color:var(--accent); }
-  .set-item .lbl { font-size:0.7rem; color:var(--dim); margin-top:2px; }
-  #set-center { text-align:center; margin-top:14px; font-size:0.85rem; color:var(--nc); }
+    .deutung {
+      background: rgba(10,10,20,0.7);
+      border: 1px solid #1a1a2a;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .deutung h2 {
+      color: #ffd700;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+    #log {
+      background: #06060a;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 10px;
+      max-height: 120px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      color: #88ddbb;
+      border: 1px solid #1a1a2a;
+      line-height: 1.6;
+    }
 
-  /* ACHS-KOMPASS */
-  #compass { display:grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .axis-group { border:1px solid var(--border); border-radius:6px; padding:10px; background:#151515; }
-  .axis-group .title { color:var(--accent); font-size:0.75rem; margin-bottom:6px; }
-  .axis-group .items { font-size:0.8rem; color:var(--fg); line-height:1.6; }
-  .axis-group .items span { color:var(--dim); }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: rgba(10,10,20,0.5);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 16px;
+      border: 1px solid #1a1a2a;
+      align-items: center;
+    }
+    .controls button {
+      background: #111;
+      color: #d0d9e6;
+      border: 1px solid #333;
+      padding: 6px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 10px;
+      transition: 0.2s;
+    }
+    .controls button:hover { border-color: #ffd700; background: #1a1a2a; }
+    .controls button.primary { border-color: #ffd700; color: #ffd700; }
+    .controls button.primary:hover { background: #ffd700; color: #000; }
+    .controls button.attack { border-color: #ff8c00; color: #ff8c00; }
+    .controls button.attack:hover { background: #ff8c00; color: #000; }
+    .controls button.resume { border-color: #4f4; color: #4f4; }
+    .controls button.resume:hover { background: #4f4; color: #000; }
+    .controls input {
+      background: #1e242c;
+      border: 1px solid #2f3542;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 10px;
+      flex: 1;
+      min-width: 140px;
+    }
+    .controls input::placeholder { color: #445555; }
 
-  /* KOMPATIBILITÄTS-TABELLE */
-  table { width:100%; border-collapse:collapse; font-size:0.78rem; margin-top:6px; }
-  th, td { border:1px solid var(--border); padding:8px; text-align:left; }
-  th { background:#181818; color:var(--axiom); font-weight:normal; }
-  td.axiomiat { color: var(--accent); }
-  tr:hover { background:#1a1a1a; }
+    .footer {
+      margin-top: 20px;
+      padding: 8px 12px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 6px;
+      font-size: 9px;
+      color: #445555;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .footer .gold { color: #ffd700; }
 
-  /* HUB LINKS */
-  #hub-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap:10px; }
-  .hub-card {
-    border:1px solid var(--border); border-radius:8px; padding:14px; background:#151515;
-    transition:0.2s; text-decoration:none; color:var(--fg); display:block;
-  }
-  .hub-card:hover { border-color: var(--axiom); background:#1a1a1a; }
-  .hub-card .name { color: var(--accent); font-size:0.95rem; }
-  .hub-card .desc { color: var(--dim); font-size:0.72rem; margin-top:4px; line-height:1.4; }
-  .hub-card .path { color:#555; font-size:0.65rem; margin-top:6px; }
+    .matrix-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 6px 0;
+    }
+    .matrix-row {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 4px 0;
+    }
+    .matrix-node {
+      background: #0a0a0a;
+      padding: 4px 14px;
+      border-radius: 6px;
+      border: 1px solid #3d5a70;
+      color: #ffd700;
+      font-weight: bold;
+      min-width: 50px;
+      text-align: center;
+    }
+    .matrix-arrow { color: #0ff; font-size: 16px; }
+    .matrix-label { font-size: 9px; color: #3d5a70; margin-top: 2px; }
 
-  #edit-hint {
-    max-width:900px; margin: 2rem auto 0; font-size:0.7rem; color:#555; text-align:center;
-    border-top:1px dashed var(--border); padding-top:10px;
-  }
-  footer { text-align:center; margin-top:3rem; font-size:0.65rem; color:#444; letter-spacing:0.1em; }
-</style>
+    /* ===== NET.work HUB (neu) ===== */
+    .hub-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 900px) { .hub-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .hub-grid { grid-template-columns: 1fr; } }
+    .hub-node {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: #0e0e1a;
+      border: 1px solid #1a1a2a;
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-decoration: none;
+      color: #d0d9e6;
+      transition: 0.2s;
+    }
+    .hub-node:hover { border-color: #ffd700; background: #14141f; }
+    .hub-node .hub-icon { font-size: 18px; }
+    .hub-node .hub-name { font-weight: bold; font-size: 12px; color: #ffd700; }
+    .hub-node .hub-axis { font-size: 9px; color: #666; }
+    .hub-node .hub-status { font-size: 9px; margin-top: 2px; }
+    .hub-node .hub-status.unknown { color: #665; }
+  </style>
 </head>
 <body>
+<div class="container">
 
-<div id="origin">iki1uc</div>
-<div id="note">vorläufige Station · axiomisch · fluid</div>
-<div class="marker">◉ Stammform · Family‑Help · Ursprung</div>
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <h1>👑 IKI1UC · NET.work</h1>
+      <div class="sub">Königliche Atom‑Index · 3‑9‑81 · Industrie 6.0 · Universalis</div>
+    </div>
+    <div class="status-led">
+      <span><span class="led green"></span> NET.online</span>
+      <span><span class="led green"></span> RESPO.master</span>
+      <span id="pause-led"><span class="led green" id="pause-dot"></span> <span id="pause-label">läuft</span></span>
+      <span id="sys-clock" style="color:#666;">⏱️ --:--</span>
+    </div>
+  </div>
 
-<!-- AXIOMIAT.SET -->
-<section>
-  <h2>◈ AXIOMIAT.SET — Stammform</h2>
-  <div id="set-grid"></div>
-  <div id="set-center"></div>
-</section>
+  <!-- DREI ACHSEN -->
+  <div class="grid-3">
+    <div class="card">
+      <h2>🌍 WELT <span class="badge">3</span></h2>
+      <div class="metric-grid">
+        <div class="metric"><span class="label">Router</span><span class="value gold" id="welt-router">aktiv</span></div>
+        <div class="metric"><span class="label">Stage</span><span class="value cyan" id="welt-stage">3D</span></div>
+        <div class="metric"><span class="label">Plugins</span><span class="value pink" id="welt-plugins">13</span></div>
+        <div class="metric"><span class="label">Badges</span><span class="value orange" id="welt-badges">0</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>⚡ KRAFT <span class="badge">9</span></h2>
+      <div class="metric-grid">
+        <div class="metric"><span class="label">Queue</span><span class="value cyan" id="kraft-queue">0</span></div>
+        <div class="metric"><span class="label">ZEN</span><span class="value gold" id="kraft-zen">bereit</span></div>
+        <div class="metric"><span class="label">Dispatcher</span><span class="value green" id="kraft-input">aktiv</span></div>
+        <div class="metric"><span class="label">Befehle</span><span class="value orange" id="kraft-cmds">0</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>🧬 LEBEN <span class="badge">81</span></h2>
+      <div class="metric-grid">
+        <div class="metric"><span class="label">Zellen</span><span class="value pink" id="leben-zellen">81</span></div>
+        <div class="metric"><span class="label">Tick</span><span class="value gold" id="leben-tick">0</span></div>
+        <div class="metric"><span class="label">Vital</span><span class="value green" id="leben-vital">0.00</span></div>
+        <div class="metric"><span class="label">Drift</span><span class="value cyan" id="leben-drift">0.00</span></div>
+      </div>
+    </div>
+  </div>
 
-<!-- ACHS-KOMPASS -->
-<section>
-  <h2>◈ Universelle Achs‑Orientierung</h2>
-  <div id="compass"></div>
-</section>
+  <!-- MATRIX VISUAL -->
+  <div class="deutung" style="border-color:#ffd70044;">
+    <h2>🧮 3hit90 · MATRIX <span style="font-size:9px;color:#3d5a70;font-weight:400;">(lebt jetzt mit jedem Tick)</span></h2>
+    <div class="matrix-visual">
+      <div class="matrix-row">
+        <span class="matrix-node" id="m81">81</span>
+        <span class="matrix-arrow">→</span>
+        <span class="matrix-node" id="m243">243</span>
+        <span class="matrix-arrow">→</span>
+        <span class="matrix-node" id="m729">729</span>
+      </div>
+      <div class="matrix-label" id="formulaDisplay">3 × (0 ÷ 6) × 90 = 0</div>
+    </div>
+  </div>
 
-<!-- KOMPATIBILITÄTS-ÜBERSETZER -->
-<section>
-  <h2>◈ Übersetzer — Kompatibilität zu allen Techniken</h2>
-  <table id="compat-table"></table>
-</section>
+  <!-- NET.work HUB (neu) -->
+  <div class="deutung" style="border-color:#66ccff44;">
+    <h2 style="color:#66ccff;">🕸️ NET.work · HUB <span style="font-size:9px;color:#3d5a70;font-weight:400;">Königsknoten → Module</span></h2>
+    <div class="hub-grid" id="hubGrid"></div>
+    <div style="font-size:9px;color:#445555;margin-top:8px;">
+      Links gehen relativ von dieser Datei aus. Ein Modul ist "erreichbar", wenn die Datei im selben Ordner liegt — sonst zeigt der Browser normal einen 404. Das ist reine Navigation, keine simulierte Verbindung.
+    </div>
+  </div>
 
-<!-- HUB -->
-<section>
-  <h2>◈ Ursprung → Alle Stationen</h2>
-  <div id="hub-grid"></div>
-</section>
+  <!-- LOG / DEUTUNG -->
+  <div class="deutung">
+    <h2>📖 DEUTUNG · Netz‑Log</h2>
+    <div id="log">▶ IKI1UC · NET.work · Königliche Atom‑Index bereit …</div>
+  </div>
 
-<div id="edit-hint">
-  Pfade unter „path" sind relative Platzhalter — trage hier die echten Ordner-/Repo‑Pfade ein,
-  wenn AXIOMIAT und deine anderen Projekte im selben Verzeichnis bzw. auf GitHub Pages liegen.
+  <!-- STEUERUNG -->
+  <div class="controls">
+    <input id="cmdInput" placeholder="SHOCK / WAVE / LINK / PUSH / GROW / MOVE / BREAK" />
+    <button class="attack" onclick="sendCmd()">⚡ SENDEN</button>
+    <button class="primary" onclick="toggleAuto()">▶ AUTO</button>
+    <button onclick="stepTick()">⏭ SCHRITT</button>
+    <button class="resume" onclick="resumeRun()">▶ WEITER</button>
+    <button onclick="resetAll()">⟲ RESET</button>
+    <span style="color:#666;font-size:9px;">Speed:</span>
+    <input type="range" id="speedSlider" min="1" max="10" value="3" style="width:80px;background:#1e242c;" />
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>🧬 IKI1UC · <span class="gold">NET.work</span></span>
+    <span>⚡ 3‑9‑81 · Industrie 6.0</span>
+    <span>⌨️  Leertaste = Auto‑Toggle · Enter = Befehl · p = Weiter</span>
+  </div>
+
 </div>
 
-<footer>AXIOMIAT · kein Anfang · kein Ende · aber wir streben · fluid · offen · bereit</footer>
-
 <script>
-// ============================================================
-// AXIOMIAT.SET (aus SET.js) + Mini-SET (AXIOMIAT.js)
-// ============================================================
-const AXIOMIAT = { origin:"iki1uc", state:"fluid", cache:true, ready:true };
-const AXIOMIAT_SET = { family:["AH","HA","ÄH","HÄ"], center:"NC", note:"Stammform. Vorläufig. Erweiterbar." };
+  // ================================================================
+  // IKI1UC · NET.work — Königliche Atom‑Engine (v2 · Universalis)
+  //
+  // Bugfixes gegenüber der Ursprungsversion:
+  //
+  // 1) FREEZE-BUG: stepTick() setzte paused=true und rief DANACH
+  //    tickStep() auf, das bei paused=true sofort abbricht. Der
+  //    SCHRITT-Button hat also nie wirklich getickt UND das System
+  //    für immer eingefroren (kein Button setzte paused wieder auf
+  //    false). Fix: tickStep(force) kann den paused-Check jetzt
+  //    gezielt übergehen, und ein neuer "▶ WEITER"-Button (plus
+  //    Taste "p") setzt paused wieder zurück.
+  //
+  // 2) RESET setzte paused nicht zurück → nach dem Freeze blieb
+  //    das System auch nach RESET eingefroren. Jetzt: resetAll()
+  //    setzt paused=false.
+  //
+  // 3) Die Matrix (81→243→729) wurde nur einmal bei init() mit
+  //    Input 0 berechnet; calcMatrix() existierte, wurde aber nie
+  //    aufgerufen. Die Anzeige war dauerhaft "3 × 0 × 90 = 0".
+  //    Fix: calcMatrix() wird jetzt am Ende jedes tickStep()
+  //    aufgerufen, die Matrix lebt jetzt wirklich mit.
+  //
+  // NEU: NET.work-HUB — Navigationskarten zu den anderen genannten
+  // Modulen (home.net.html, koop.net.html, move.lan.html,
+  // my.LAN.USE.html, wetter.wlan.html, soccer.mylan.html,
+  // axiom.net.html). Das sind einfache <a>-Links, keine simulierte
+  // Anbindung — ich kenne den Inhalt dieser Dateien nicht, daher
+  // wird hier nichts über sie behauptet oder aus ihnen geladen.
+  // ================================================================
 
-// ============================================================
-// Achs-Orientierung (aus README.md)
-// ============================================================
-const COMPASS = {
-  "Bewegung": ["up","down","left","right","main","back"],
-  "Meta":     ["in","out","echo","impulse"],
-  "Orbit":    ["inner","outer","cross","roundabout"]
-};
+  const HUB_MODULES = [
+    { file: 'home.net.html',    name: 'HOME',    axis: '.net',  icon: '🏠' },
+    { file: 'koop.net.html',    name: 'KOOP',    axis: '.net',  icon: '🤝' },
+    { file: 'move.lan.html',    name: 'MOVE',    axis: '.lan',  icon: '🚀' },
+    { file: 'my.LAN.USE.html', name: 'LAN.USE',  axis: '.lan',  icon: '🧩' },
+    { file: 'wetter.wlan.html', name: 'WETTER',  axis: '.wlan', icon: '⛅' },
+    { file: 'soccer.mylan.html', name: 'SOCCER', axis: '.mylan', icon: '⚽' },
+    { file: 'axiom.net.html',  name: 'AXIOM',    axis: '.net',  icon: '📐' }
+  ];
 
-// ============================================================
-// KOMPATIBILITÄTS-MAPPING — AXIOMIAT-Begriffe ↔ Achs-Systeme
-// deiner anderen Projekte. Ordnet AXIOMIAT als Ursprungs-Schicht
-// über die konkreten Achsen-Implementierungen ein.
-// ============================================================
-const COMPAT_ROWS = [
-  { axiomiat:"main / back",        ring:"X / T",      coin:"T‑Axiom (Träger)", artlink:"N0 (Origin)",      dreih3:"Station 3 (Form)" },
-  { axiomiat:"left / right",       ring:"Y / S",       coin:"Y‑Axiom (Fächer)", artlink:"NS (Surface)",     dreih3:"Station 3×3 (9D)" },
-  { axiomiat:"up / down",          ring:"Z / MOVE",     coin:"E‑Axiom (Energie)",artlink:"NC (Core)",        dreih3:"Station 6 (Dualform)" },
-  { axiomiat:"in / out",           ring:"X‑Kreuzpunkt", coin:"X‑Axiom (Verbindung)", artlink:"NC.sub (Sub-Trace)", dreih3:"Station 9 (Tensor)" },
-  { axiomiat:"echo / impulse",     ring:"EYE / MODE",   coin:"KI‑Axiom (Muster)", artlink:"NC.verify (Sync)", dreih3:"Station 12 (Quadrat)" },
-  { axiomiat:"inner / outer",      ring:"RESPO (CORE)",  coin:"C‑Axiom (Mitte)",  artlink:"Orbit (Heatmap)",  dreih3:"Station 6E (Energieform)" },
-  { axiomiat:"cross / roundabout", ring:"router‑matrix", coin:"SLIDE/WETTE",     artlink:"Bridge/Core‑Chain", dreih3:"φ‑Multiskala" }
-];
+  const NET = {
+    tick: 0,
+    paused: false,
+    auto: false,
+    speed: 3,
 
-// ============================================================
-// HUB — Verweise auf die anderen Stationen
-// ============================================================
-const HUB = [
-  { name:"RING", desc:"Achsen‑Router‑System (CORE/RESPO/EYE/MODE), AXI‑Link", path:"../RING/index.html" },
-  { name:"3hoch3", desc:"Energie‑Matrix‑Station 27D, Respo‑Evaluator (QI/IQQ, φ‑Multiskala)", path:"../3hoch3/index.html" },
-  { name:"ART.link", desc:"Portal‑Modul (ID/NC/Orbit/Bridge/Core‑Chain/Respo‑Linker)", path:"../ARTlink/index.html" },
-  { name:"COIN·SCHACH·6D", desc:"Axiom‑Matrix, Figuren, UNLINEAR‑Engine, MASSE", path:"../coin-schach/index.html" },
-  { name:"REAL‑CONNECT", desc:"KI‑User‑KI Netzwerk, 3 Teilnehmer, vollvermascht", path:"../real-connect/index.html" }
-];
+    welt: { router: 'aktiv', stage: '3D', plugins: 13, badges: 0 },
+    kraft: { queue: 0, zen: 'bereit', dispatcher: 'aktiv', cmds: 0 },
+    leben: { zellen: 81, tick: 0, vital: 0.5, drift: 0.1 },
 
-// ============================================================
-// RENDER
-// ============================================================
-function renderSet(){
-  const grid = document.getElementById('set-grid');
-  grid.innerHTML = AXIOMIAT_SET.family.map(f => `
-    <div class="set-item"><div class="val">${f}</div><div class="lbl">Family</div></div>
-  `).join('');
-  document.getElementById('set-center').textContent =
-    `Zentrum: ${AXIOMIAT_SET.center} · state=${AXIOMIAT.state} · ${AXIOMIAT_SET.note}`;
-}
+    matrix: { atom: 81, uni: 243, run: 729 },
+    commands: [],
+    log: [],
+    maxLog: 50,
 
-function renderCompass(){
-  const wrap = document.getElementById('compass');
-  wrap.innerHTML = Object.entries(COMPASS).map(([group, items]) => `
-    <div class="axis-group">
-      <div class="title">${group}</div>
-      <div class="items">${items.map(i => `<span>·</span> ${i}`).join('<br>')}</div>
-    </div>
-  `).join('');
-}
+    init() {
+      this.logMsg('👑 IKI1UC · NET.work · Königliche Atom‑Index gestartet (v2, Freeze-Bug gefixt)');
+      this.logMsg('💡 Befehle: SHOCK, WAVE, LINK, PUSH, GROW, MOVE, BREAK');
+      this.updateUI();
+      this.updateMatrix(0);
+      this.updatePauseLED();
+      this.renderHub();
+    },
 
-function renderCompat(){
-  const table = document.getElementById('compat-table');
-  table.innerHTML = `
-    <thead><tr><th>AXIOMIAT</th><th>RING</th><th>COIN·SCHACH</th><th>ART.link</th><th>3hoch3</th></tr></thead>
-    <tbody>
-      ${COMPAT_ROWS.map(r => `
-        <tr>
-          <td class="axiomiat">${r.axiomiat}</td>
-          <td>${r.ring}</td><td>${r.coin}</td><td>${r.artlink}</td><td>${r.dreih3}</td>
-        </tr>`).join('')}
-    </tbody>`;
-}
+    renderHub() {
+      const grid = document.getElementById('hubGrid');
+      grid.innerHTML = HUB_MODULES.map(m => `
+        <a class="hub-node" href="${m.file}" target="_blank" rel="noopener">
+          <span class="hub-icon">${m.icon}</span>
+          <span class="hub-name">${m.name}</span>
+          <span class="hub-axis">${m.axis} · ${m.file}</span>
+          <span class="hub-status unknown">○ Status unbekannt (Datei nicht geprüft)</span>
+        </a>
+      `).join('');
+    },
 
-function renderHub(){
-  const grid = document.getElementById('hub-grid');
-  grid.innerHTML = HUB.map(h => `
-    <a class="hub-card" href="${h.path}">
-      <div class="name">${h.name}</div>
-      <div class="desc">${h.desc}</div>
-      <div class="path">${h.path}</div>
-    </a>
-  `).join('');
-}
+    // fix #1: force-Parameter erlaubt einen echten Tick trotz paused
+    tickStep(force) {
+      if (this.paused && !force) return;
+      this.tick++;
+      this.leben.tick = this.tick;
+      this.leben.vital = 0.5 + 0.3 * Math.sin(this.tick * 0.05);
+      this.leben.drift = 0.1 + 0.05 * Math.cos(this.tick * 0.07);
+      this.kraft.zen = this.tick % 10 < 3 ? '⚡ aktiv' : 'bereit';
+      this.kraft.queue = Math.max(0, this.kraft.queue - 0.2);
+      this.welt.badges = Math.floor(this.tick / 20) % 10;
 
-renderSet();
-renderCompass();
-renderCompat();
-renderHub();
+      if (this.commands.length > 0) {
+        const cmd = this.commands.shift();
+        this.processCmd(cmd);
+      }
+      this.updateUI();
+      this.calcMatrix(); // fix #3: Matrix lebt jetzt mit jedem Tick mit
+    },
+
+    processCmd(cmd) {
+      const u = cmd.toUpperCase();
+      this.logMsg(`⚡ Befehl: ${u}`);
+      this.kraft.cmds++;
+      if (u.includes('SHOCK')) {
+        this.kraft.queue += 5;
+        this.leben.vital = Math.min(1, this.leben.vital + 0.1);
+        this.logMsg('💥 SHOCK → Queue +5, Vital +0.1');
+      } else if (u.includes('WAVE')) {
+        this.kraft.queue += 3;
+        this.leben.drift += 0.05;
+        this.logMsg('🌊 WAVE → Drift +0.05');
+      } else if (u.includes('LINK')) {
+        this.welt.badges = Math.min(20, this.welt.badges + 3);
+        this.logMsg('🔗 LINK → Badges +3');
+      } else if (u.includes('PUSH')) {
+        this.kraft.queue = Math.max(0, this.kraft.queue - 2);
+        this.logMsg('📌 PUSH → Queue -2');
+      } else if (u.includes('GROW')) {
+        this.leben.zellen = Math.min(243, this.leben.zellen + 10);
+        this.logMsg('🌱 GROW → Zellen +10');
+      } else if (u.includes('MOVE')) {
+        this.leben.drift = Math.max(0, this.leben.drift - 0.03);
+        this.logMsg('🚀 MOVE → Drift -0.03');
+      } else if (u.includes('BREAK')) {
+        this.kraft.queue = 0;
+        this.leben.vital = 0.3;
+        this.logMsg('💔 BREAK → Queue 0, Vital 0.3');
+      } else {
+        this.logMsg(`⚠️ Unbekannt: ${u}`);
+      }
+      this.updateUI();
+    },
+
+    updateMatrix(input) {
+      const hits = Math.floor(input / 6);
+      const val = 3 * hits * 90;
+      this.matrix.atom = val * 81;
+      this.matrix.uni = val * 243;
+      this.matrix.run = val * 729;
+      document.getElementById('m81').textContent = this.matrix.atom.toFixed(0);
+      document.getElementById('m243').textContent = this.matrix.uni.toFixed(0);
+      document.getElementById('m729').textContent = this.matrix.run.toFixed(0);
+      document.getElementById('formulaDisplay').textContent = `3 × ${hits} × 90 = ${val}`;
+    },
+
+    updateUI() {
+      document.getElementById('welt-router').textContent = this.welt.router;
+      document.getElementById('welt-stage').textContent = this.welt.stage;
+      document.getElementById('welt-plugins').textContent = this.welt.plugins;
+      document.getElementById('welt-badges').textContent = this.welt.badges;
+      document.getElementById('kraft-queue').textContent = this.kraft.queue.toFixed(1);
+      document.getElementById('kraft-zen').textContent = this.kraft.zen;
+      document.getElementById('kraft-input').textContent = this.kraft.dispatcher;
+      document.getElementById('kraft-cmds').textContent = this.kraft.cmds;
+      document.getElementById('leben-zellen').textContent = this.leben.zellen;
+      document.getElementById('leben-tick').textContent = this.leben.tick;
+      document.getElementById('leben-vital').textContent = this.leben.vital.toFixed(2);
+      document.getElementById('leben-drift').textContent = this.leben.drift.toFixed(2);
+    },
+
+    updatePauseLED() {
+      const dot = document.getElementById('pause-dot');
+      const label = document.getElementById('pause-label');
+      dot.className = 'led ' + (this.paused ? 'red' : 'green');
+      label.textContent = this.paused ? 'eingefroren' : 'läuft';
+    },
+
+    logMsg(msg) {
+      const time = new Date().toLocaleTimeString();
+      this.log.push({ time, msg });
+      if (this.log.length > this.maxLog) this.log.shift();
+      this.renderLog();
+    },
+
+    renderLog() {
+      const out = document.getElementById('log');
+      out.innerHTML = this.log.map(e => `[${e.time}] ${e.msg}`).join('\n');
+      out.scrollTop = out.scrollHeight;
+    },
+
+    sendCmd(cmd) {
+      if (!cmd) {
+        const input = document.getElementById('cmdInput');
+        cmd = input.value.trim();
+        if (!cmd) return;
+        input.value = '';
+      }
+      this.commands.push(cmd);
+    },
+
+    // fix #1: STEP tickt jetzt WIRKLICH (force=true), pausiert
+    // danach bewusst, damit man Schritt für Schritt weitergehen kann
+    stepTick() {
+      this.paused = true;
+      this.logMsg('⏭ Schritt (danach pausiert)');
+      this.updatePauseLED();
+      this.tickStep(true);
+    },
+
+    // neu: expliziter Weg, aus dem pausierten Zustand rauszukommen,
+    // ohne gleich AUTO starten zu müssen
+    resumeRun() {
+      this.paused = false;
+      this.logMsg('▶ Weiter (nicht mehr pausiert)');
+      this.updatePauseLED();
+    },
+
+    resetAll() {
+      this.tick = 0;
+      this.kraft.queue = 0;
+      this.kraft.cmds = 0;
+      this.leben.zellen = 81;
+      this.leben.vital = 0.5;
+      this.leben.drift = 0.1;
+      this.welt.badges = 0;
+      this.commands = [];
+      this.log = [];
+      this.paused = false; // fix #2: Reset hebt auch das Einfrieren auf
+      this.logMsg('⟲ ALLES zurückgesetzt (inkl. Pause-Zustand)');
+      this.updateUI();
+      this.updateMatrix(0);
+      this.updatePauseLED();
+    },
+
+    toggleAuto() {
+      this.auto = !this.auto;
+      if (this.auto) this.paused = false; // AUTO hebt eine vorherige Pause mit auf
+      this.logMsg(this.auto ? '▶ AUTO an' : '⏸ AUTO aus');
+      this.updatePauseLED();
+      if (this.auto) {
+        const speed = parseInt(document.getElementById('speedSlider').value) || 3;
+        this.speed = speed;
+        if (this._autoInt) clearInterval(this._autoInt);
+        const delay = Math.max(200, 2000 / speed);
+        this._autoInt = setInterval(() => {
+          if (this.auto && !this.paused) this.tickStep();
+        }, delay);
+      } else {
+        if (this._autoInt) { clearInterval(this._autoInt); this._autoInt = null; }
+      }
+    },
+
+    calcMatrix() {
+      const input = this.kraft.cmds + this.kraft.queue + this.welt.badges;
+      this.updateMatrix(input);
+    }
+  };
+
+  // ---- Globale Funktionen für Buttons ----
+  window.sendCmd = function() {
+    const input = document.getElementById('cmdInput');
+    const cmd = input.value.trim();
+    if (cmd) NET.sendCmd(cmd);
+  };
+  window.toggleAuto = function() { NET.toggleAuto(); };
+  window.stepTick = function() { NET.stepTick(); };
+  window.resumeRun = function() { NET.resumeRun(); };
+  window.resetAll = function() { NET.resetAll(); };
+
+  // ---- Tastatur ----
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && document.activeElement === document.getElementById('cmdInput')) {
+      window.sendCmd(); e.preventDefault();
+    }
+    if (e.key === ' ' && e.target === document.body) {
+      e.preventDefault(); window.toggleAuto();
+    }
+    if ((e.key === 'p' || e.key === 'P') && e.target !== document.getElementById('cmdInput')) {
+      window.resumeRun();
+    }
+  });
+
+  // ---- Speed Slider ----
+  document.getElementById('speedSlider').addEventListener('input', function() {
+    const speed = parseInt(this.value) || 3;
+    NET.speed = speed;
+    if (NET.auto) {
+      if (NET._autoInt) { clearInterval(NET._autoInt); NET._autoInt = null; }
+      const delay = Math.max(200, 2000 / speed);
+      NET._autoInt = setInterval(() => {
+        if (NET.auto && !NET.paused) NET.tickStep();
+      }, delay);
+    }
+  });
+
+  // ---- Uhr ----
+  function updateClock() {
+    document.getElementById('sys-clock').textContent = `⏱️ ${new Date().toLocaleTimeString()}`;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // ---- Hintergrund-Tick ----
+  setInterval(() => {
+    if (!NET.auto && !NET.paused) NET.tickStep();
+  }, 700);
+
+  // ---- Start ----
+  NET.init();
+  console.log('👑 IKI1UC · NET.work · Königliche Atom‑Index geladen (v2, Freeze-Bug gefixt)');
+  console.log('⌨️  Leertaste = Auto, Enter = Befehl, p = Weiter (aus Pause raus)');
 </script>
-
 </body>
 </html>
